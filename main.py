@@ -12,7 +12,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 logging.basicConfig(level=logging.INFO)
 scheduler = AsyncIOScheduler()
 
-
 if __name__ == '__main__':
     db.init()
     scheduler.start()
