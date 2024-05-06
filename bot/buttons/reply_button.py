@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-from bot.buttons.text import add_group, send_message, back_
+from bot.buttons.text import add_group, send_message, back_, messages
 from db.models import Groups
 
 
@@ -17,8 +17,8 @@ async def groups_button():
     for group_instance in data:
         group_id = group_instance[0].group_id
         username = group_instance[0].username
-        design.append([KeyboardButton(text=str(username + group_id))])
-    design.append([KeyboardButton(text=back_)])
+        design.append([KeyboardButton(text=str(username + " " + group_id))])
+    design.append([KeyboardButton(text=messages)])
     return ReplyKeyboardMarkup(keyboard=design, resize_keyboard=True)
 
 

@@ -15,9 +15,6 @@ from bot.dispatcher import dp, bot
 @dp.message_handler(CommandStart(), state='*')
 async def start_handler(msg: types.Message, state: FSMContext):
     await msg.answer(f"Менюлардан бирини танланг", reply_markup=await main_menu())
-    user_id = msg.from_user.id
-    username = msg.from_user.username
-    await Users.create(user_id=str(user_id), username=username)
     await state.set_state("main_menu")
 
 
