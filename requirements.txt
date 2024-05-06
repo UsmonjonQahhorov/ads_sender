@@ -6,4 +6,4 @@ python-dotenv==1.0.1
 requests==2.31.0
 SQLAlchemy==2.0.29
 psycopg2-binary==2.9.6
-
+aiofiles==23.1.0
