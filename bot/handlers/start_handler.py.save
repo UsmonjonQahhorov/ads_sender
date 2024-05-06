@@ -14,7 +14,8 @@ from bot.dispatcher import dp, bot
 
 @dp.message_handler(CommandStart(), state='*')
 async def start_handler(msg: types.Message, state: FSMContext):
-    await msg.answer(f"Менюлардан бирини танланг", reply_markup=await main_menu())
+    await msg.answer(f"Менюлардан бирини танланг", reply_markup=
+
     await state.set_state("main_menu")
 
 

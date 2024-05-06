@@ -12,10 +12,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 logging.basicConfig(level=logging.INFO)
 scheduler = AsyncIOScheduler()
 
-# async def create_all():
-#     await db.create_all()
-#     await Messages.create()
-
 
 if __name__ == '__main__':
     db.init()
