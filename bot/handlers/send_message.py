@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from asyncio import get_event_loop
+from uuid import uuid4
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
@@ -22,11 +23,12 @@ async def create_task_func(chat_id, message_id, from_chat_id):
 
 
 def schedule_forwarding(chat_id, message_id, from_chat_id, days_, hours_, minutes_):
-    job = scheduler.add_job(create_task_func, 'interval', hours=hours_, minutes=minutes_,
-                            args=(chat_id, message_id, from_chat_id),
-                            end_date=datetime.now() + timedelta(days=days_))
-    scheduler.start()
-    return f"{job.id} {message_id}"
+    # scheduler.start()
+    job_id = str(uuid4())
+    print(f"Adding job with ID: {job_id}, message_id: {message_id}, group_id: {chat_id}")
+    scheduler.add_job(create_task_func, 'interval', hours=hours_, minutes=minutes_, id=job_id,
+                      args=(chat_id, message_id, from_chat_id),
+                      end_date=datetime.now() + timedelta(days=days_))
 
 
 @dp.message_handler(Text(send_message), state="*")
@@ -87,22 +89,21 @@ async def send_message_handler(msg: types.Message, state: FSMContext):
 @dp.message_handler(state="schedule")
 async def save_time_date(msg: types.Message, state: FSMContext):
     try:
-        a, b, c = msg.text.split("-")
-        print(a, b, c)
-        print(msg.text)
+        a, b, c = map(int, msg.text.split("-"))
         async with state.proxy() as data:
             message_id = data.get("message_id")
             groups_ = data["groups_id_"]
-            print(groups_)
-            for i in groups_:
-                group_id = (i.split(" ")[1])
-                job = schedule_forwarding(chat_id=group_id, message_id=message_id, from_chat_id=msg.from_user.id,
-                                          days_=int(a),
-                                          hours_=int(b),
-                                          minutes_=int(c))
-                print(i)
-                print(job)
-        await msg.answer("Yuborish boshlandi", reply_markup=await main_menu())
+            for group_info in groups_:
+                group_id = group_info.split(" ")[1]
+                print(group_id)
+                schedule_forwarding(chat_id=group_id,
+                                    message_id=message_id,
+                                    from_chat_id=msg.from_user.id,
+                                    days_=a, hours_=b, minutes_=c)
+        scheduler.start()
+        await msg.answer("Yuborish boshlanmadi. Damingizni olishingiz mumkin!", reply_markup=await main_menu())
         await state.set_state("main_menu")
-    except:
-        await msg.answer("Yuborish boshlandi damingizni olishingiz mumkin!")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        await msg.answer("Yuborish boshlanmadi. Damingizni olishingiz mumkin!")
