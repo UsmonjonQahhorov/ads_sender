@@ -14,21 +14,18 @@ from bot.dispatcher import dp, bot
 
 @dp.message_handler(CommandStart(), state='*')
 async def start_handler(msg: types.Message, state: FSMContext):
-    await msg.answer(f"Менюлардан бирини танланг", reply_markup=await main_menu())
-    await state.set_state("main_menu")
+    if msg.from_user.id == 6108693014 or 176163305:
+        await msg.answer(f"Менюлардан бирини танланг", reply_markup=await main_menu())
+        await state.set_state("main_menu")
+    else:
+        await msg.answer("Siz botdan foydalana olmaysiz\n"
+                         "Botdan foydalanish uchun +998998787323 ga murojat qiling!")
 
 
 @dp.message_handler(Text(add_group), state="main_menu")
 async def add_group(msg: types.Message, state: FSMContext):
     await msg.answer("Гурух username ини киритинг‼ мисол учун:(@gurux_linki)‼")
     await state.set_state("group_link")
-
-
-# @dp.message_handler(Text(send_message), state="main_menu")
-# async def send_message(msg: types.Message, state: FSMContext):
-#     await state.set_state("choosen_group")
-#     await msg.answer("Habar yubormoqchi bolgan chatni tanlang!!", reply_markup=await groups_button())
-#     data = await Groups.get_all()
 
 
 @dp.message_handler(state="group_link")
@@ -42,7 +39,10 @@ async def save_group(msg: types.Message, state: FSMContext):
         user = await Groups.get_by_chat_id(chat_id=group_id)
         if user is None:
             await Groups.create(group_id=str(group_id), username=str(username))
+            await msg.answer("Gurux qoshildi botdan foydalanishingiz mumkin!", reply_markup=await main_menu())
+            await state.set_state("main_menu")
         else:
-            await msg.answer("Bu gurux allaqachon qoshilgan")
+            await msg.answer("Bu gurux allaqachon qoshilgan", reply_markup=await main_menu())
+            await state.set_state("main_menu")
     except:
         await msg.answer("Гурух топилмади")

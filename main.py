@@ -15,7 +15,7 @@ scheduler = AsyncIOScheduler()
 if __name__ == '__main__':
     db.init()
     scheduler.start()
-    # scheduler.remove_all_jobs()
     executor.start_polling(dp, skip_updates=True)
     loop = get_event_loop()
+    logging.getLogger('apscheduler').setLevel(logging.DEBUG)
     loop.run_forever()
