@@ -22,6 +22,14 @@ async def start_handler(msg: types.Message, state: FSMContext):
                          "Botdan foydalanish uchun +998998787323 ga murojat qiling!")
 
 
+@dp.message_handler(lambda message: message.text.startswith('get_user_id'))
+async def get_user_id(message: types.Message):
+    user = message.text.split()[1]
+    print(user)
+    chat = await bot.get_chat(user)
+    print(chat)
+
+
 @dp.message_handler(Text(add_group), state="main_menu")
 async def add_group(msg: types.Message, state: FSMContext):
     await msg.answer("Гурух username ини киритинг‼ мисол учун:(@gurux_linki)‼")
