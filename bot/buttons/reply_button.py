@@ -17,7 +17,8 @@ async def groups_button():
     for group_instance in data:
         group_id = group_instance[0].group_id
         username = group_instance[0].username
-        design.append([KeyboardButton(text=str(username + " " + group_id))])
+        if group_id and username:
+            design.append([KeyboardButton(text=str(username + " " + group_id))])
     design.append([KeyboardButton(text=messages)])
     return ReplyKeyboardMarkup(keyboard=design, resize_keyboard=True)
 

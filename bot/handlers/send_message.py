@@ -17,7 +17,10 @@ scheduler = AsyncIOScheduler()
 
 
 async def create_task_func(chat_id, message_id, from_chat_id):
-    await bot.forward_message(chat_id=chat_id, message_id=message_id, from_chat_id=from_chat_id)
+    try:
+        await bot.forward_message(chat_id=chat_id, message_id=message_id, from_chat_id=from_chat_id)
+    except:
+        pass
 
 
 def schedule_forwarding(chat_id, message_id, from_chat_id, days_, hours_, minutes_):

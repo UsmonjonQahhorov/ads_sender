@@ -4,6 +4,7 @@ import os
 import pytz
 from dotenv import load_dotenv
 from sqlalchemy.future import select
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
@@ -56,6 +57,7 @@ class AbstractClass:
         objects = await db.execute(query)
         object_ = objects.first()
         return object_
+
 
 
 class CreatedModel(Base, AbstractClass):

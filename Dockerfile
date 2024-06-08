@@ -1,17 +1,22 @@
+# Use the slim variant of Python 3.10
 FROM python:3.10
 
+# Set the working directory
 WORKDIR /app
 
+# Install required system packages
+RUN apt-get update && \
+    apt-get install -y python3-venv && \
+    apt-get clean
+
+# Copy the current directory contents into the container at /app
 COPY . /app
 
-RUN python -m venv venv
-RUN /bin/bash -c "source venv/bin/activate"
+# Create a virtual environment
+RUN python3 -m venv venv
 
-ENV TZ=Asia/Tashkent
-RUN ls -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# Activate virtual environment and install dependencies
+RUN /bin/bash -c "source /app/venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt"
 
-RUN pip install --no-cache-dir -r requirements.txt
-
-ENV NAME World
-
-CMD ["python", "./main.py"]
+# Run the application
+CMD ["./venv/bin/python", "main.py"]
